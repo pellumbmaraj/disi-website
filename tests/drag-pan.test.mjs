@@ -105,3 +105,32 @@ test("canceled drags do not swallow the next navigation click", async () => {
   assert.equal(emit(hero, "click").defaultPrevented, false);
   await settle();
 });
+
+test("an open viewer owns diagonal and vertical touch gestures until release", async () => {
+  const hero = new Hero(), moves = [], lifecycle = [];
+  attachDragPan(hero, () => ({
+    panBy: (...args) => moves.push(args),
+    beginPan: type => lifecycle.push(type),
+    endPan: () => lifecycle.push("end"),
+  }), () => true);
+  emit(hero, "pointerdown", { pointerType: "touch" });
+  await settle();
+  emit(hero, "pointermove", { pointerType: "touch", clientX: 102, clientY: 140 });
+  emit(hero, "pointermove", { pointerType: "touch", clientX: 150, clientY: 180 });
+  emit(hero, "pointerup", { pointerType: "touch" });
+  assert.deepEqual(moves, [[2, 40, "touch"], [48, 40, "touch"]]);
+  assert.deepEqual(lifecycle, ["touch", "end"]);
+});
+
+test("a released lazy-loading gesture never starts an abandoned render loop", async () => {
+  const hero = new Hero(), lifecycle = [], moves = [];
+  let ready;
+  attachDragPan(hero, () => new Promise(resolve => { ready = resolve; }));
+  emit(hero, "pointerdown");
+  emit(hero, "pointermove", { clientX: 150 });
+  emit(hero, "pointerup");
+  ready({ panBy: (...args) => moves.push(args), beginPan: () => lifecycle.push("begin") });
+  await settle();
+  assert.deepEqual(lifecycle, []);
+  assert.deepEqual(moves, [[50, 0, "mouse"]]);
+});
