@@ -1,10 +1,10 @@
 // Keep the original gesture, including movement while the panorama loads.
-export function attachDragPan(host, activate) {
+export function attachDragPan(host, activate, isActive = () => false) {
   let gesture;
   let suppressClick = false;
 
   function flush(current) {
-    if (!current.viewer) return;
+    if (!current.viewer || (!current.dx && !current.dy)) return;
     current.viewer.panBy(current.dx, current.dy, current.pointerType);
     current.dx = current.dy = 0;
   }
@@ -12,8 +12,9 @@ export function attachDragPan(host, activate) {
   function start(current, capture = true) {
     current.started = true;
     if (capture) host.setPointerCapture(current.id);
-    Promise.resolve(activate()).then((viewer) => {
+    Promise.resolve(activate(current.pointerType)).then((viewer) => {
       current.viewer = viewer;
+      if (!current.ended) viewer?.beginPan?.(current.pointerType);
       flush(current);
     });
   }
@@ -32,7 +33,8 @@ export function attachDragPan(host, activate) {
       x: event.clientX, y: event.clientY, dx: 0, dy: 0,
       started: false, moved: false,
     };
-    if (event.pointerType !== "touch") start(gesture);
+    // Once open, the panorama owns the whole swipe, including diagonal motion.
+    if (event.pointerType !== "touch" || isActive()) start(gesture);
   });
 
   host.addEventListener("pointermove", (event) => {
@@ -61,6 +63,8 @@ export function attachDragPan(host, activate) {
     if (!gesture || gesture.id !== event.pointerId) return;
     const current = gesture;
     gesture = undefined;
+    current.ended = true;
+    current.viewer?.endPan?.();
     suppressClick = event.type === "pointerup" && current.moved;
     if (event.type === "pointerup" && !current.started) start(current, false);
     if (host.hasPointerCapture(current.id)) host.releasePointerCapture(current.id);

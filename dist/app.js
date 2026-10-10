@@ -103,6 +103,8 @@ let opening;
 let active = false;
 function deactivateViewer() {
   active = false;
+  hero.classList.remove("viewer-active");
+  viewer?.endPan();
   panorama.hidden = true;
   explore.hidden = false;
   $(".viewer-help").hidden = true;
@@ -131,6 +133,10 @@ function activateViewer(focus = false) {
       explore.hidden = true;
       $(".viewer-help").hidden = false;
       active = true;
+      hero.classList.add("viewer-active");
+      $(".viewer-help").textContent = matchMedia("(pointer: coarse)").matches
+        ? "Swipe to look around · Tap 360° to return to page scrolling"
+        : "Drag to look around · Arrow keys to pan · + / − to zoom";
       toggle.setAttribute("aria-pressed", "true");
       toggle.setAttribute("aria-label", "Close 360 degree view");
       viewer.resize();
@@ -155,7 +161,8 @@ explore.addEventListener("click", () => activateViewer(true));
 toggle.addEventListener("click", () =>
   active ? deactivateViewer() : activateViewer(true),
 );
-attachDragPan(hero, () => activateViewer(true));
+// Touch activation must not focus/scroll the canvas while a finger is moving.
+attachDragPan(hero, pointerType => activateViewer(pointerType !== "touch"), () => active);
 const fullscreen = $(".fullscreen");
 if (!document.fullscreenEnabled) fullscreen.hidden = true;
 fullscreen.addEventListener("click", async () => {
