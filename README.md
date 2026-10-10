@@ -23,7 +23,7 @@ npm test
 
 - Full responsive portfolio: immersive hero, studio introduction, nine projects, four services and contact details.
 - Project gallery with previous/next controls, keyboard navigation, modal focus handling and project-specific email inquiries.
-- WebGL 360° panorama that activates and pans with the first mouse drag or horizontal touch swipe, with keyboard zoom, reset and fullscreen where supported. Movement made while loading is preserved.
+- WebGL 360° panorama that activates and pans with the first mouse drag or horizontal touch swipe, with keyboard zoom, reset and fullscreen where supported. Movement made while loading is preserved. Frame-paced smoothing and a bounded, adaptive render resolution keep rotation responsive on phones; reduced-motion users get immediate movement.
 - Original imagery in locally hosted responsive WebP sizes, lazy loading and explicit image dimensions.
 - Accessible navigation, image descriptions, focus indicators and reduced-motion support.
 - Restrictive content security policy, MIME protection, framing protection and privacy permissions policy.
@@ -42,7 +42,7 @@ Instagram and LinkedIn links remain omitted, following the conversation's explic
 | `dist/assets/` | Optimized imagery and recreated GR monogram |
 | `scripts/serve.mjs` | Loopback-only local server with security headers |
 
-Keep image dimensions and responsive `srcset` attributes when replacing imagery. Rename replaced asset files or purge caches. The panorama renderer draws only when the view or viewport changes; it does not continuously animate.
+Keep image dimensions and responsive `srcset` attributes when replacing imagery. Rename replaced asset files or purge caches. The panorama renderer draws while input settles or the viewport changes, then stops. Rotation calculations run per vertex, the render buffer is capped at one million pixels, and sustained slow frames reduce resolution automatically. The original panorama texture stays intact.
 
 Keyboard controls: gallery Left/Right to navigate, Escape to close; panorama arrows to pan, +/− to zoom, Home to reset and Escape to exit. Touch leaves vertical page scrolling available.
 
