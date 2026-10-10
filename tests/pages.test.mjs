@@ -22,9 +22,12 @@ test("Pages output resolves every asset under the repository path", async () => 
   }
   assert.doesNotMatch(html, /(?:src|href)="\/(?!\/)/);
   const version = html.match(/app\.js\?v=([a-f0-9]{12})/)[1];
+  assert.ok(html.includes(`name="site-version" content="${version}"`));
+  assert.equal(JSON.parse(await readFile("pages/version.json", "utf8")).version, version);
+  assert.match(html, /connect-src 'self'/);
   assert.ok(html.includes(`styles.css?v=${version}`));
   const app = await readFile("pages/app.js", "utf8");
-  for (const file of ["drag-pan.js", "panorama.js"])
+  for (const file of ["drag-pan.js", "panorama.js", "freshness.js"])
     assert.ok(app.includes(`./${file}?v=${version}`), file);
   execFileSync(process.execPath, ["scripts/prepare-pages.mjs"]);
   assert.ok((await readFile("pages/index.html", "utf8")).includes(`app.js?v=${version}`));

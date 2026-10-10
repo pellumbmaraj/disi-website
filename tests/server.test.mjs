@@ -23,7 +23,7 @@ test("page loads with restrictive security headers", async () => {
   );
   assert.match(
     response.headers.get("content-security-policy"),
-    /connect-src 'none'/,
+    /connect-src 'self'/,
   );
   assert.match(await response.text(), /GR Architecture/);
 });
