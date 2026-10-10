@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="color-scheme" content="light" />
+    <title>GR Architecture — From image to space</title>
+    <meta
+      name="description"
+      content="GR Architecture is a contemporary architecture and design studio in Tirana, Albania. Explore architecture, urban design, interiors and 3D visualization."
+    />
+    <meta property="og:title" content="GR Architecture — From image to space" />
+    <meta
+      property="og:description"
+      content="Architecture, urban design, interiors and visualization. Spaces that are functional, distinctive and enduring."
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://gr-architecture-portfolio.noble-beech-8745.chatgpt.site/"
+    />
+    <meta
+      property="og:image"
+      content="https://gr-architecture-portfolio.noble-beech-8745.chatgpt.site/assets/iconic-1600.webp"
+    />
+    <link
+      rel="canonical"
+      href="https://gr-architecture-portfolio.noble-beech-8745.chatgpt.site/"
+    />
+    <link rel="icon" href="./assets/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#studio">Skip to main content</a>
+    <main>
+      <section
+        class="hero"
+        aria-label="ICONIC Forest Boutique Hotel immersive preview"
+        id="top"
+      >
+        <img
+          class="hero-image"
+          src="./assets/hero-1600.webp"
+          srcset="
+            ./assets/hero-960.webp   960w,
+            ./assets/hero-1600.webp 1600w,
+            ./assets/hero-2560.webp 2560w
+          "
+          sizes="(max-width: 699px) 1300px, 125vw"
+          width="1600"
+          height="800"
+          alt="Sculpted white walls, warm wood and a sweeping staircase at ICONIC Forest Boutique Hotel"
+          fetchpriority="high"
+        />
+        <header class="site-header container">
+          <a class="brand" href="#top" aria-label="GR Architecture, home"
+            ><img src="./assets/mark.svg" width="76" height="86" alt="GR"
+          /></a>
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="main-nav"
+          >
+            <span>Menu</span><span class="menu-icon" aria-hidden="true"></span>
+          </button>
+          <nav id="main-nav" aria-label="Main navigation">
+            <a href="#projects">Projects</a><a href="#studio">Studio</a
+            ><a href="#services">Services</a><a href="#contact">Contact</a>
+          </nav>
+        </header>
+        <div class="panorama" hidden>
+          <canvas
+            id="panorama-canvas"
+            tabindex="0"
+            aria-label="360 degree hotel view. Drag horizontally to look around. Use arrow keys to pan, plus and minus to zoom, and Escape to exit."
+            aria-describedby="panorama-help"
+          ></canvas>
+        </div>
+        <button class="explore" type="button">
+          <span class="explore-icon" aria-hidden="true">↔</span
+          ><span>Drag to explore 360°</span>
+        </button>
+        <div class="viewer-help" id="panorama-help" hidden>
+          Drag to look around · Arrow keys to pan · + / − to zoom
+        </div>
+        <div class="hero-controls">
+          <button
+            class="view-toggle"
+            type="button"
+            aria-pressed="false"
+            aria-label="Open 360 degree view"
+          >
+            360°
+          </button>
+          <button
+            class="fullscreen"
+            type="button"
+            aria-label="Enter fullscreen view"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" />
+            </svg>
+          </button>
+        </div>
+        <p class="viewer-status sr-only" role="status"></p>
+      </section>
+      <div class="identity-bar">
+        <div class="container">
+          <span>GR — ARCHITECTURE</span><span class="micro">TIRANË · 2026</span>
+        </div>
+      </div>
+      <section
+        class="studio container"
+        id="studio"
+        aria-labelledby="studio-title"
+      >
+        <p class="eyebrow">01 — STUDIO</p>
+        <div class="studio-copy">
+          <h1 id="studio-title">FROM IMAGE TO SPACE</h1>
+          <p>
+            GR Architecture is a contemporary architecture and design studio
+            focused on creating meaningful relationships between space, context
+            and experience. From architecture and urban design to interiors and
+            visualization, we approach each project as a dialogue between its
+            physical surroundings, its purpose and the people who experience it.
+          </p>
+          <p>
+            Our work combines conceptual clarity, spatial precision and a strong
+            sensitivity to context. We believe architecture should not simply
+            occupy a place, but contribute to its identity — creating spaces
+            that are functional, distinctive and enduring.
+          </p>
+        </div>
+      </section>
+      <section
+        class="projects container"
+        id="projects"
+        aria-labelledby="projects-title"
+      >
+        <div class="section-heading">
+          <h2 id="projects-title">Selected Projects</h2>
+          <span class="micro">2022—2026</span>
+        </div>
+        <article class="project featured">
+          <a
+            class="project-link"
+            href="./assets/iconic-1600.webp"
+            data-project="0"
+          >
+            <div class="project-image">
+              <img
+                src="./assets/iconic-960.webp"
+                srcset="
+                  ./assets/iconic-480.webp   480w,
+                  ./assets/iconic-960.webp   960w,
+                  ./assets/iconic-1600.webp 1600w
+                "
+                sizes="(min-width: 1440px) 1328px, (min-width: 700px) calc(100vw - 112px), calc(100vw - 40px)"
+                width="1600"
+                height="900"
+                alt="Hotel lobby with curved white stairs, sculptural lighting and warm wood finishes"
+                loading="lazy"
+                decoding="async"
+              /><span class="view-project" aria-hidden="true"
+                >View project ↗</span
+              >
+            </div>
+            <div class="project-caption">
+              <h3>ICONIC Forest Boutique Hotel, Tiranë</h3>
+              <p>HOSPITALITY · 2026</p>
+            </div>
+          </a>
+        </article>
+        <div class="project-row">
+          <article class="project">
+            <a
+              class="project-link"
+              href="./assets/house-1500.webp"
+              data-project="1"
+              ><div class="project-image">
+                <img
+                  src="./assets/house-960.webp"
+                  srcset="
+                    ./assets/house-480.webp   480w,
+                    ./assets/house-960.webp   960w,
+                    ./assets/house-1500.webp 1500w
+                  "
+                  sizes="(min-width: 1440px) 780px, (min-width: 700px) 56vw, calc(100vw - 40px)"
+                  width="1500"
+                  height="1200"
+                  alt="Renovated two-story residence framed by a landscaped garden"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="view-project" aria-hidden="true"
+                  >View project ↗</span
+                >
+              </div>
+              <div class="project-caption">
+                <h3>Fully Renovated 2-Story House, Tiranë</h3>
+                <p>RESIDENTIAL · 2025</p>
+              </div></a
+            >
+          </article>
+          <article class="project">
+            <a
+              class="project-link"
+              href="./assets/durres-1600.webp"
+              data-project="2"
+              ><div class="project-image">
+                <img
+                  src="./assets/durres-960.webp"
+                  srcset="
+                    ./assets/durres-480.webp   480w,
+                    ./assets/durres-960.webp   960w,
+                    ./assets/durres-1600.webp 1600w
+                  "
+                  sizes="(min-width: 1440px) 492px, (min-width: 700px) 35vw, calc(100vw - 40px)"
+                  width="1600"
+                  height="900"
+                  alt="Durrës apartment with a white sofa, timber accents and integrated television wall"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="view-project" aria-hidden="true"
+                  >View project ↗</span
+                >
+              </div>
+              <div class="project-caption">
+                <h3>Apartment 1+1, Durrës</h3>
+                <p>INTERIOR · 2024</p>
+              </div></a
+            >
+          </article>
+        </div>
+        <div class="project-row">
+          <article class="project">
+            <a
+              class="project-link"
+              href="./assets/elbasan-1600.webp"
+              data-project="3"
+              ><div class="project-image">
+                <img
+                  src="./assets/elbasan-960.webp"
+                  srcset="
+                    ./assets/elbasan-480.webp   480w,
+                    ./assets/elbasan-960.webp   960w,
+                    ./assets/elbasan-1600.webp 1600w
+                  "
+                  sizes="(min-width: 1440px) 780px, (min-width: 700px) 56vw, calc(100vw - 40px)"
+                  width="1600"
+                  height="1131"
+                  alt="Annotated aerial visualization of Elbasan waste management infrastructure within the landscape"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="view-project" aria-hidden="true"
+                  >View project ↗</span
+                >
+              </div>
+              <div class="project-caption">
+                <h3>Waste Management Site, Elbasan</h3>
+                <p>MODELING &amp; VISUALIZATION · 2026</p>
+              </div></a
+            >
+          </article>
+          <article class="project">
+            <a
+              class="project-link"
+              href="./assets/market-1600.webp"
+              data-project="4"
+              ><div class="project-image">
+                <img
+                  src="./assets/market-960.webp"
+                  srcset="
+                    ./assets/market-480.webp   480w,
+                    ./assets/market-960.webp   960w,
+                    ./assets/market-1600.webp 1600w
+                  "
+                  sizes="(min-width: 1440px) 492px, (min-width: 700px) 35vw, calc(100vw - 40px)"
+                  width="1600"
+                  height="1029"
+                  alt="Interior visualization of a contemporary food market with metal framing and service counters"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="view-project" aria-hidden="true"
+                  >View project ↗</span
+                >
+              </div>
+              <div class="project-caption">
+                <h3>Merkata e Rusit, Shkodër</h3>
+                <p>COMMERCIAL MARKET · 2025</p>
+              </div></a
+            >
+          </article>
+        </div>
+        <div class="project-row">
+          <article class="project">
+            <a
+              class="project-link"
+              href="./assets/vlore-2023-1600.webp"
+              data-project="5"
+              ><div class="project-image">
+                <img
+                  src="./assets/vlore-2023-960.webp"
+                  srcset="
+                    ./assets/vlore-2023-480.webp   480w,
+                    ./assets/vlore-2023-960.webp   960w,
+                    ./assets/vlore-2023-1600.webp 1600w
+                  "
+                  sizes="(min-width: 1440px) 780px, (min-width: 700px) 56vw, calc(100vw - 40px)"
+                  width="1600"
+                  height="900"
+                  alt="Vlorë living room with a warm neutral palette, bespoke shelving and abstract artwork"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="view-project" aria-hidden="true"
+                  >View project ↗</span
+                >
+              </div>
+              <div class="project-caption">
+                <h3>Apartment 2+1, Vlorë</h3>
+                <p>INTERIOR · 2023</p>
+              </div></a
+            >
+          </article>
+          <article class="project">
+            <a
+              class="project-link"
+              href="./assets/vlore-2024-1600.webp"
+              data-project="6"
+              ><div class="project-image">
+                <img
+                  src="./assets/vlore-2024-960.webp"
+                  srcset="
+                    ./assets/vlore-2024-480.webp   480w,
+                    ./assets/vlore-2024-960.webp   960w,
+                    ./assets/vlore-2024-1600.webp 1600w
+                  "
+                  sizes="(min-width: 1440px) 492px, (min-width: 700px) 35vw, calc(100vw - 40px)"
+                  width="1600"
+                  height="900"
+                  alt="Bright Vlorë apartment with a white sectional, full-height curtains and a circular ceiling feature"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="view-project" aria-hidden="true"
+                  >View project ↗</span
+                >
+              </div>
+              <div class="project-caption">
+                <h3>Apartment 2+1, Vlorë</h3>
+                <p>INTERIOR · 2024</p>
+              </div></a
+            >
+          </article>
+        </div>
+        <div class="project-row">
+          <article class="project">
+            <a
+              class="project-link"
+              href="./assets/fier-1600.webp"
+              data-project="7"
+              ><div class="project-image">
+                <img
+                  src="./assets/fier-960.webp"
+                  srcset="
+                    ./assets/fier-480.webp   480w,
+                    ./assets/fier-960.webp   960w,
+                    ./assets/fier-1600.webp 1600w
+                  "
+                  sizes="(min-width: 1440px) 780px, (min-width: 700px) 56vw, calc(100vw - 40px)"
+                  width="1600"
+                  height="1131"
+                  alt="Annotated aerial rendering of Fier waste management site showing roads and treatment facilities"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="view-project" aria-hidden="true"
+                  >View project ↗</span
+                >
+              </div>
+              <div class="project-caption">
+                <h3>Waste Management Site, Fier</h3>
+                <p>MODELING &amp; VISUALIZATION · 2026</p>
+              </div></a
+            >
+          </article>
+          <article class="project">
+            <a
+              class="project-link"
+              href="./assets/water-1600.webp"
+              data-project="8"
+              ><div class="project-image">
+                <img
+                  src="./assets/water-960.webp"
+                  srcset="
+                    ./assets/water-480.webp   480w,
+                    ./assets/water-960.webp   960w,
+                    ./assets/water-1600.webp 1600w
+                  "
+                  sizes="(min-width: 1440px) 492px, (min-width: 700px) 35vw, calc(100vw - 40px)"
+                  width="1600"
+                  height="900"
+                  alt="Aerial visualization of a hillside water supply facility in its surrounding neighborhood"
+                  loading="lazy"
+                  decoding="async"
+                /><span class="view-project" aria-hidden="true"
+                  >View project ↗</span
+                >
+              </div>
+              <div class="project-caption">
+                <h3>
+                  Water Supply Network Expansion &amp; Detailed Design, Tiranë
+                </h3>
+                <p>VISUALIZATION · 2026</p>
+              </div></a
+            >
+          </article>
+        </div>
+      </section>
+      <section class="services" id="services" aria-labelledby="services-title">
+        <div class="container services-layout">
+          <div>
+            <p class="eyebrow">03 — SERVICES</p>
+            <h2 id="services-title">From first line<br />to lived space.</h2>
+          </div>
+          <div class="service-list">
+            <a
+              href="mailto:glejdisresulaj@gmail.com?subject=Architecture%20project"
+              ><span class="micro">01</span><span>Architecture</span
+              ><span aria-hidden="true">↗</span></a
+            >
+            <a
+              href="mailto:glejdisresulaj@gmail.com?subject=Urban%20design%20project"
+              ><span class="micro">02</span><span>Urban Design</span
+              ><span aria-hidden="true">↗</span></a
+            >
+            <a
+              href="mailto:glejdisresulaj@gmail.com?subject=Interior%20design%20project"
+              ><span class="micro">03</span><span>Interior Design</span
+              ><span aria-hidden="true">↗</span></a
+            >
+            <a
+              href="mailto:glejdisresulaj@gmail.com?subject=3D%20visualization%20project"
+              ><span class="micro">04</span><span>3D Visualization</span
+              ><span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </div>
+      </section>
+      <footer class="contact" id="contact">
+        <div class="container">
+          <p class="eyebrow">04 — CONTACT</p>
+          <div class="contact-layout">
+            <h2>Let’s build something<br />that belongs.</h2>
+            <div class="contact-email">
+              <p class="micro">NEW PROJECTS</p>
+              <a href="mailto:glejdisresulaj@gmail.com"
+                >glejdisresulaj@gmail.com <span aria-hidden="true">↗</span></a
+              >
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p>© 2026 GR ARCHITECTURE</p>
+            <p>Tiranë, Albania</p>
+            <a href="#top">Back to top ↑</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+    <dialog class="project-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-toolbar">
+        <p class="micro" id="dialog-counter"></p>
+        <button class="dialog-close" type="button" aria-label="Close project">
+          Close <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="dialog-image">
+        <img id="dialog-img" width="1600" height="900" alt="" />
+      </div>
+      <div class="dialog-caption">
+        <div>
+          <h2 id="dialog-title"></h2>
+          <p class="micro" id="dialog-meta"></p>
+        </div>
+        <a id="dialog-inquiry" href="mailto:glejdisresulaj@gmail.com"
+          >Discuss a similar project ↗</a
+        >
+      </div>
+      <div class="dialog-nav">
+        <button type="button" class="previous">← Previous</button>
+        <p class="micro">SELECTED PROJECTS</p>
+        <button type="button" class="next">Next →</button>
+      </div>
+    </dialog>
+  </body>
+</html>
