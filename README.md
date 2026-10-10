@@ -39,6 +39,7 @@ Instagram and LinkedIn links remain omitted, following the conversation's explic
 | `dist/app.js` | Navigation, gallery and viewer activation |
 | `dist/panorama.js` | On-demand perspective panorama renderer |
 | `dist/drag-pan.js` | First-gesture activation and touch scrolling behavior |
+| `dist/freshness.js` | Automatic release checks on opening or restoring the page |
 | `dist/assets/` | Optimized imagery and recreated GR monogram |
 | `scripts/serve.mjs` | Loopback-only local server with security headers |
 
@@ -66,7 +67,9 @@ The repository already points to `https://github.com/pellumbmaraj/disi-website`.
 
 GitHub Pages availability depends on the repository visibility and your GitHub plan. The usual Pages site is public; publishing does not preserve the private preview's ChatGPT sign-in restriction. GitHub's [custom workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) explains configuration and availability.
 
-The workflow validates the source, runs tests and uploads a prepared `pages/` directory. Relative asset URLs work under `/disi-website/`, at an account root and with custom domains. The configured Pages URL is used automatically for canonical and Open Graph metadata. Content versions on the JavaScript module graph and CSS prevent phones from reusing an older viewer after deployment.
+The workflow validates the source, runs tests and uploads a prepared `pages/` directory. Relative asset URLs work under `/disi-website/`, at an account root and with custom domains. The configured Pages URL is used automatically for canonical and Open Graph metadata. A content hash of the HTML, JavaScript and CSS versions the whole module graph and stylesheet. The same release is published in `version.json` and the HTML metadata.
+
+On opening the page, restoring it from browser history, or returning to its tab, the page checks the release manifest with caching disabled and a unique request URL. A newer release triggers one automatic cache-bypassing navigation, then removes its internal update marker from the address bar. The normal public URL and any section anchor or other query parameters remain intact. No reload occurs when the release is unchanged or the check fails/offline; requests stay on the same origin. This also works without service workers or browser storage. The one-time adoption limit is that HTML cached before this updater existed must first expire under GitHub Pages' 10-minute cache policy; code cannot run inside an already-cached older document. Subsequent releases update automatically.
 
 To create the deployment files locally:
 
