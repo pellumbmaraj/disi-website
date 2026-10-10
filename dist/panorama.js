@@ -1,4 +1,36 @@
-// Equirectangular image -> perspective view. No third-party runtime or continuous render loop.
+// Bound GPU work, including on high-DPI phones and in fullscreen.
+export function panoramaSize(width, height, dpr = 1, quality = 1) {
+  if (!width || !height) return [0, 0];
+  const ratio = Math.min(dpr, 1.25, Math.sqrt(1000000 / (width * height))) * quality;
+  return [Math.max(1, Math.floor(width * ratio)), Math.max(1, Math.floor(height * ratio))];
+}
+
+// Time-based smoothing stays consistent on 30, 60 and 120 Hz screens.
+export function followAngle(value, target, elapsed, reducedMotion = false) {
+  if (reducedMotion || Math.abs(target - value) < 0.0002) return target;
+  return value + (target - value) * (1 - Math.exp(-elapsed / 18));
+}
+
+export function createRenderBudget() {
+  let quality = 1, samples = 0, duration = 0;
+  return {
+    get quality() { return quality; },
+    observe(elapsed) {
+      // Ignore idle time and background-tab pauses, not sustained slow frames.
+      if (elapsed <= 0 || elapsed >= 100) return false;
+      samples++;
+      duration += elapsed;
+      if (samples < 12) return false;
+      const slow = duration / samples > 24;
+      samples = duration = 0;
+      if (!slow || quality <= 0.5) return false;
+      quality = Math.max(0.5, quality * 0.8);
+      return true;
+    },
+  };
+}
+
+// Equirectangular image -> perspective view. Animation stops as soon as the view settles.
 export async function createPanorama(canvas, onExit) {
   const gl = canvas.getContext("webgl", {
     alpha: false,
@@ -25,19 +57,22 @@ export async function createPanorama(canvas, onExit) {
       program,
       compile(
         gl.VERTEX_SHADER,
-        `attribute vec2 position; varying vec2 point; void main(){ point=position; gl_Position=vec4(position,0.0,1.0); }`,
+        `attribute vec2 position; varying mediump vec3 direction; uniform float aspect; uniform float field; uniform vec4 rotation;
+        void main(){
+          vec3 d=vec3(position.x*aspect*field,position.y*field,1.0);
+          d=vec3(d.x,d.y*rotation.z+d.z*rotation.w,-d.y*rotation.w+d.z*rotation.z);
+          direction=vec3(d.x*rotation.x+d.z*rotation.y,d.y,-d.x*rotation.y+d.z*rotation.x);
+          gl_Position=vec4(position,0.0,1.0);
+        }`,
       ),
     );
     gl.attachShader(
       program,
       compile(
         gl.FRAGMENT_SHADER,
-        `precision mediump float; varying vec2 point; uniform sampler2D photo; uniform float aspect; uniform float field; uniform float yaw; uniform float pitch;
+        `precision mediump float; varying mediump vec3 direction; uniform sampler2D photo;
     void main(){
-      vec3 d=normalize(vec3(point.x*aspect*field,point.y*field,1.0));
-      float cp=cos(pitch),sp=sin(pitch),cy=cos(yaw),sy=sin(yaw);
-      d=vec3(d.x,d.y*cp+d.z*sp,-d.y*sp+d.z*cp);
-      d=vec3(d.x*cy+d.z*sy,d.y,-d.x*sy+d.z*cy);
+      vec3 d=normalize(direction);
       vec2 uv=vec2(fract(atan(d.x,d.z)/6.2831853+0.5),0.5-asin(clamp(d.y,-1.0,1.0))/3.14159265);
       gl_FragColor=texture2D(photo,uv);
     }`,
@@ -80,7 +115,7 @@ export async function createPanorama(canvas, onExit) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, source);
     const uniforms = Object.fromEntries(
-      ["aspect", "field", "yaw", "pitch"].map((key) => [
+      ["aspect", "field", "rotation"].map((key) => [
         key,
         gl.getUniformLocation(program, key),
       ]),
@@ -88,38 +123,42 @@ export async function createPanorama(canvas, onExit) {
     let yaw = 0.55,
       pitch = 0,
       fov = 85,
-      frame = 0;
+      frame = 0,
+      lastFrame = 0;
+    let targetYaw = yaw, targetPitch = pitch;
+    const budget = createRenderBudget();
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-    const draw = () => {
+    const draw = (timestamp) => {
       frame = 0;
       if (disposed || gl.isContextLost() || !canvas.clientWidth || !canvas.clientHeight)
         return;
+      const elapsed = lastFrame ? timestamp - lastFrame : 1000 / 60;
+      if (lastFrame && budget.observe(elapsed)) sizeCanvas();
+      yaw = followAngle(yaw, targetYaw, elapsed, reducedMotion.matches);
+      pitch = followAngle(pitch, targetPitch, elapsed, reducedMotion.matches);
       gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform1f(uniforms.aspect, canvas.width / canvas.height);
+      gl.uniform1f(uniforms.aspect, canvas.clientWidth / canvas.clientHeight);
       gl.uniform1f(uniforms.field, Math.tan((fov * Math.PI) / 360));
-      gl.uniform1f(uniforms.yaw, yaw);
-      gl.uniform1f(uniforms.pitch, pitch);
+      gl.uniform4f(uniforms.rotation, Math.cos(yaw), Math.sin(yaw), Math.cos(pitch), Math.sin(pitch));
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+      if (yaw !== targetYaw || pitch !== targetPitch) {
+        lastFrame = timestamp;
+        schedule();
+      } else lastFrame = 0;
     };
     const schedule = () => {
       if (!disposed && !frame) frame = requestAnimationFrame(draw);
     };
-    const resize = () => {
-      const ratio = Math.min(
-        window.devicePixelRatio || 1,
-        1.5,
-        2400 / canvas.clientWidth,
-        1600 / canvas.clientHeight,
-      );
-      const width = Math.round(canvas.clientWidth * ratio);
-      const height = Math.round(canvas.clientHeight * ratio);
+    const sizeCanvas = () => {
+      const [width, height] = panoramaSize(canvas.clientWidth, canvas.clientHeight, window.devicePixelRatio || 1, budget.quality);
       if (!width || !height) return;
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
       }
-      schedule();
     };
+    const resize = () => { sizeCanvas(); schedule(); };
     let disposed = false;
     const controller = new AbortController();
     const observer = new ResizeObserver(resize);
@@ -135,25 +174,25 @@ export async function createPanorama(canvas, onExit) {
       gl.deleteProgram(program);
     };
     const panBy = (dx, dy, pointerType) => {
-      yaw -= dx * 0.004;
+      targetYaw -= dx * 0.004;
       // Touch keeps vertical movement available for page scrolling.
       if (pointerType !== "touch")
-        pitch = clamp(pitch + dy * 0.004, -1.2, 1.2);
+        targetPitch = clamp(targetPitch + dy * 0.004, -1.2, 1.2);
       schedule();
     };
     listen("keydown", (event) => {
       const actions = {
         ArrowLeft: () => {
-          yaw -= 0.12;
+          targetYaw -= 0.12;
         },
         ArrowRight: () => {
-          yaw += 0.12;
+          targetYaw += 0.12;
         },
         ArrowUp: () => {
-          pitch = clamp(pitch + 0.1, -1.2, 1.2);
+          targetPitch = clamp(targetPitch + 0.1, -1.2, 1.2);
         },
         ArrowDown: () => {
-          pitch = clamp(pitch - 0.1, -1.2, 1.2);
+          targetPitch = clamp(targetPitch - 0.1, -1.2, 1.2);
         },
         "+": () => {
           fov = clamp(fov - 5, 45, 105);
@@ -165,8 +204,8 @@ export async function createPanorama(canvas, onExit) {
           fov = clamp(fov + 5, 45, 105);
         },
         Home: () => {
-          yaw = 0.55;
-          pitch = 0;
+          yaw = targetYaw = 0.55;
+          pitch = targetPitch = 0;
           fov = 85;
         },
         Escape: onExit,
