@@ -20,7 +20,7 @@ for (const match of (js + panorama).matchAll(/["']((?:\.\/|\/)assets\/[^"']+)["'
 for (const file of files)
   if (!(await stat(path.join(root, file))).isFile())
     throw new Error(`Missing: ${file}`);
-for (const file of ["app.js", "panorama.js", "drag-pan.js"]) {
+for (const file of ["app.js", "panorama.js", "drag-pan.js", "freshness.js"]) {
   const result = spawnSync(
     process.execPath,
     ["--check", path.join(root, file)],
