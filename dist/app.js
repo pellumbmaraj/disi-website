@@ -1,4 +1,7 @@
 import { attachDragPan } from "./drag-pan.js";
+import { watchForUpdates } from "./freshness.js";
+
+watchForUpdates();
 
 const $ = (selector) => document.querySelector(selector);
 const menu = $(".menu-toggle");
