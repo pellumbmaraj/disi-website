@@ -23,7 +23,7 @@ npm test
 
 - Full responsive portfolio: immersive hero, studio introduction, nine projects, four services and contact details.
 - Project gallery with previous/next controls, keyboard navigation, modal focus handling and project-specific email inquiries.
-- WebGL 360° panorama that activates and pans with the first mouse drag or horizontal touch swipe, with keyboard zoom, reset and fullscreen where supported. Movement made while loading is preserved. Frame-paced smoothing and a bounded, adaptive render resolution keep rotation responsive on phones; reduced-motion users get immediate movement.
+- WebGL 360° panorama that activates and pans with the first mouse drag or horizontal touch swipe, with keyboard zoom, reset and fullscreen where supported. Movement made while loading is preserved. Active touch gestures stay in the viewer, follow the finger directly and rotate 180° per full-width swipe. Tap 360° to close the viewer and scroll the page again.
 - Original imagery in locally hosted responsive WebP sizes, lazy loading and explicit image dimensions.
 - Accessible navigation, image descriptions, focus indicators and reduced-motion support.
 - Restrictive content security policy, MIME protection, framing protection and privacy permissions policy.
@@ -42,9 +42,9 @@ Instagram and LinkedIn links remain omitted, following the conversation's explic
 | `dist/assets/` | Optimized imagery and recreated GR monogram |
 | `scripts/serve.mjs` | Loopback-only local server with security headers |
 
-Keep image dimensions and responsive `srcset` attributes when replacing imagery. Rename replaced asset files or purge caches. The panorama renderer draws while input settles or the viewport changes, then stops. Rotation calculations run per vertex, the render buffer is capped at one million pixels, and sustained slow frames reduce resolution automatically. The original panorama texture stays intact.
+Keep image dimensions and responsive `srcset` attributes when replacing imagery. The panorama uses a textured sphere so each pixel only samples the image, without inverse trigonometry. Phones use a maximum 2048-pixel texture and 450,000 render pixels; desktop keeps the original texture and up to one million render pixels. Sustained slow display frames reduce resolution automatically. Idle frames do not redraw, and animation stops after release once the view settles. Desktop retains short smoothing; touch is immediate.
 
-Keyboard controls: gallery Left/Right to navigate, Escape to close; panorama arrows to pan, +/− to zoom, Home to reset and Escape to exit. Touch leaves vertical page scrolling available.
+Keyboard controls: gallery Left/Right to navigate, Escape to close; panorama arrows to pan, +/− to zoom, Home to reset and Escape to exit. Vertical touch swipes scroll the page while the viewer is closed. Once open, swipes rotate in both directions; the 360° toggle restores scrolling.
 
 ## Deploy
 
@@ -66,7 +66,7 @@ The repository already points to `https://github.com/pellumbmaraj/disi-website`.
 
 GitHub Pages availability depends on the repository visibility and your GitHub plan. The usual Pages site is public; publishing does not preserve the private preview's ChatGPT sign-in restriction. GitHub's [custom workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) explains configuration and availability.
 
-The workflow validates the source, runs tests and uploads a prepared `pages/` directory. Relative asset URLs work under `/disi-website/`, at an account root and with custom domains. The configured Pages URL is used automatically for canonical and Open Graph metadata.
+The workflow validates the source, runs tests and uploads a prepared `pages/` directory. Relative asset URLs work under `/disi-website/`, at an account root and with custom domains. The configured Pages URL is used automatically for canonical and Open Graph metadata. Content versions on the JavaScript module graph and CSS prevent phones from reusing an older viewer after deployment.
 
 To create the deployment files locally:
 
