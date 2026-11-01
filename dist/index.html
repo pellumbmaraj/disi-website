@@ -39,17 +39,10 @@
   </head>
   <body>
     <a class="skip-link" href="#studio">Skip to main content</a>
-    <main>
-      <section
-        class="hero"
-        aria-label="ICONIC Forest Boutique Hotel immersive preview"
-        id="top"
-      >
-        <img class="hero-image" src="./assets/hotel-hero-1440-b314704e.webp" srcset="./assets/hotel-hero-720-12d310f2.webp 720w, ./assets/hotel-hero-1440-b314704e.webp 1440w, ./assets/hotel-hero-2400-f2b8d0a7.webp 2400w" sizes="100vw" width="2400" height="1350" alt="Sculptural white staircase, warm timber and curved ceiling lights at ICONIC Forest Boutique Hotel" fetchpriority="high" decoding="async" />
-        <header class="site-header container">
+        <header class="site-header container is-scrolled">
           <a class="brand" href="#top" aria-label="GR Architecture, home"
             ><img src="./assets/gr-logo-d456e8fb.svg" width="91" height="93" alt="GR Architecture"
-          /></a>
+          /><span class="brand-name">GR Architecture<small>Tiranë, Albania</small></span></a>
           <button
             class="menu-toggle"
             type="button"
@@ -59,10 +52,25 @@
             <span>Menu</span><span class="menu-icon" aria-hidden="true"></span>
           </button>
           <nav id="main-nav" aria-label="Main navigation">
-            <a href="#projects">Projects</a><a href="#studio">Studio</a
+            <a href="#projects">Work</a><a href="#studio">Studio</a
             ><a href="#services">Services</a><a href="#contact">Contact</a>
           </nav>
         </header>
+    <main>
+      <section
+        class="hero"
+        aria-label="ICONIC Forest Boutique Hotel immersive preview"
+        id="top"
+      >
+        <img class="hero-image" src="./assets/hotel-hero-1440-b314704e.webp" srcset="./assets/hotel-hero-720-12d310f2.webp 720w, ./assets/hotel-hero-1440-b314704e.webp 1440w, ./assets/hotel-hero-2400-f2b8d0a7.webp 2400w" sizes="100vw" width="2400" height="1350" alt="Sculptural white staircase, warm timber and curved ceiling lights at ICONIC Forest Boutique Hotel" fetchpriority="high" decoding="async" />
+
+        <div class="hero-content">
+          <p class="eyebrow">ARCHITECTURE · INTERIORS · URBAN DESIGN</p>
+          <h1 id="hero-title">From image<br /><em>to space.</em></h1>
+          <p class="hero-intro">Thoughtful spaces. Lasting character.<br />Architecture and interiors by GR Architecture.</p>
+          <div class="hero-actions"><a class="button button-light" href="#projects">Explore our work <span aria-hidden="true">↗</span></a><a class="text-link" href="#studio">Discover the studio</a></div>
+        </div>
+        <div class="hero-bottom"><p><span>FEATURED PROJECT / 01</span> ICONIC Forest Boutique Hotel, Tiranë</p><a href="#studio">Scroll to discover <span aria-hidden="true">↓</span></a></div>
         <div class="panorama" hidden>
           <canvas
             id="panorama-canvas"
@@ -109,42 +117,26 @@
       </section>
       <div class="identity-bar">
         <div class="container">
-          <span>GR — ARCHITECTURE</span><span class="micro">TIRANË · 2026</span>
+          <span>Spaces. Context. Experience.</span><span class="micro">INDEPENDENT DESIGN STUDIO · TIRANË</span>
         </div>
       </div>
-      <section
-        class="studio container"
-        id="studio"
-        aria-labelledby="studio-title"
-      >
-        <p class="eyebrow">01 — STUDIO</p>
-        <div class="studio-copy">
-          <h1 id="studio-title">FROM IMAGE TO SPACE</h1>
-          <p>
-            GR Architecture is a contemporary architecture and design studio
-            focused on creating meaningful relationships between space, context
-            and experience. From architecture and urban design to interiors and
-            visualization, we approach each project as a dialogue between its
-            physical surroundings, its purpose and the people who experience it.
-          </p>
-          <p>
-            Our work combines conceptual clarity, spatial precision and a strong
-            sensitivity to context. We believe architecture should not simply
-            occupy a place, but contribute to its identity — creating spaces
-            that are functional, distinctive and enduring.
-          </p>
+      <section class="studio container" id="studio" aria-labelledby="studio-title">
+        <p class="eyebrow section-label">01 / THE STUDIO</p>
+        <div class="studio-layout">
+          <figure class="studio-visual"><img src="./assets/iconic-05-959-d2b8d421.webp" srcset="./assets/iconic-05-959-d2b8d421.webp 959w, ./assets/iconic-05-1920-353126f0.webp 1920w" sizes="(min-width: 900px) 43vw, calc(100vw - 40px)" width="1920" height="1181" alt="Hotel entrance and landscaped facade designed for ICONIC Forest Boutique Hotel" loading="lazy" decoding="async" /><figcaption>ICONIC Forest Boutique Hotel / Tiranë</figcaption></figure>
+          <div class="studio-copy">
+            <h2 id="studio-title">Designed for life.<br /><em>Grounded in place.</em></h2>
+            <p>We are GR Architecture, a contemporary architecture and design studio in Tiranë. We create meaningful relationships between space, context and experience.</p>
+            <p>From architecture and urban design to interiors and visualization, each project is a dialogue between its surroundings, its purpose and the people who experience it. Conceptual clarity, spatial precision and a sensitivity to context guide our work.</p>
+            <a class="text-link ink-link" href="mailto:glejdisresulaj@gmail.com">Let’s talk about your project <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
       </section>
-      <section
-        class="projects container"
-        id="projects"
-        aria-labelledby="projects-title"
-      >
-        <div class="section-heading">
-          <h2 id="projects-title">Selected Projects</h2>
-          <span class="micro">2022—2026</span>
-        </div>
-        <article class="project featured">
+      <section class="projects container" id="projects" aria-labelledby="projects-title">
+        <div class="section-heading"><div><p class="eyebrow section-label">02 / SELECTED WORK</p><h2 id="projects-title">Spaces with<br /><em>perspective.</em></h2></div><p class="section-intro">A selection of architecture, interiors and visualization projects. Explore the places, then discover the details.</p></div>
+        <div class="project-filters" role="group" aria-label="Filter projects"><button type="button" data-filter="all" aria-pressed="true" aria-controls="project-grid">All work<sup aria-hidden="true">09</sup></button><button type="button" data-filter="architecture" aria-pressed="false" aria-controls="project-grid">Architecture<sup aria-hidden="true">03</sup></button><button type="button" data-filter="interiors" aria-pressed="false" aria-controls="project-grid">Interiors<sup aria-hidden="true">03</sup></button><button type="button" data-filter="infrastructure" aria-pressed="false" aria-controls="project-grid">Infrastructure<sup aria-hidden="true">03</sup></button></div>
+        <p class="sr-only" id="project-results" role="status">9 projects shown.</p>
+        <div class="project-grid" id="project-grid"><article data-category="architecture" class="project featured">
           <a
             class="project-link"
             href="./assets/iconic-01-1920-d71e46c6.webp"
@@ -155,14 +147,12 @@
                 >View project · 15 images ↗</span
               >
             </div>
-            <div class="project-caption">
+            <div class="project-caption"><span class="project-number" aria-hidden="true">01</span>
               <h3>ICONIC Forest Boutique Hotel, Tiranë</h3>
               <p>HOSPITALITY · 2026</p>
             </div>
           </a>
-        </article>
-        <div class="project-row">
-          <article class="project">
+        </article><article data-category="architecture" class="project">
             <a
               class="project-link"
               href="./assets/house-01-1920-5c0a97fb.webp"
@@ -172,13 +162,12 @@
                   >View project · 2 images ↗</span
                 >
               </div>
-              <div class="project-caption">
+              <div class="project-caption"><span class="project-number" aria-hidden="true">02</span>
                 <h3>Fully Renovated 2-Story House, Tiranë</h3>
                 <p>RESIDENTIAL · 2025</p>
               </div></a
             >
-          </article>
-          <article class="project">
+          </article><article data-category="interiors" class="project" id="apartment-durres">
             <a
               class="project-link"
               href="./assets/durres-1600.webp"
@@ -201,15 +190,12 @@
                   >View project ↗</span
                 >
               </div>
-              <div class="project-caption">
+              <div class="project-caption"><span class="project-number" aria-hidden="true">03</span>
                 <h3>Apartment 1+1, Durrës</h3>
                 <p>INTERIOR · 2024</p>
               </div></a
             >
-          </article>
-        </div>
-        <div class="project-row">
-          <article class="project">
+          </article><article data-category="infrastructure" class="project">
             <a
               class="project-link"
               href="./assets/elbasan-01-2400-df5a5caa.webp"
@@ -219,13 +205,12 @@
                   >View project · 5 images ↗</span
                 >
               </div>
-              <div class="project-caption">
+              <div class="project-caption"><span class="project-number" aria-hidden="true">04</span>
                 <h3>Waste Management Site, Elbasan</h3>
                 <p>MODELING &amp; VISUALIZATION · 2026</p>
               </div></a
             >
-          </article>
-          <article class="project">
+          </article><article data-category="architecture" class="project">
             <a
               class="project-link"
               href="./assets/market-01-1920-e529eff1.webp"
@@ -235,15 +220,12 @@
                   >View project · 17 images ↗</span
                 >
               </div>
-              <div class="project-caption">
+              <div class="project-caption"><span class="project-number" aria-hidden="true">05</span>
                 <h3>Merkata e Rusit, Shkodër</h3>
                 <p>COMMERCIAL MARKET · 2025</p>
               </div></a
             >
-          </article>
-        </div>
-        <div class="project-row">
-          <article class="project">
+          </article><article data-category="interiors" class="project">
             <a
               class="project-link"
               href="./assets/vlore-fh-01-1920-4183b98b.webp"
@@ -253,13 +235,12 @@
                   >View project · 13 images ↗</span
                 >
               </div>
-              <div class="project-caption">
+              <div class="project-caption"><span class="project-number" aria-hidden="true">06</span>
                 <h3>Apartment 2+1, Vlorë</h3>
                 <p>INTERIOR · 2023</p>
               </div></a
             >
-          </article>
-          <article class="project">
+          </article><article data-category="interiors" class="project">
             <a
               class="project-link"
               href="./assets/vlore-ab-01-1600-9ac8dbc9.webp"
@@ -269,15 +250,12 @@
                   >View project · 5 images ↗</span
                 >
               </div>
-              <div class="project-caption">
+              <div class="project-caption"><span class="project-number" aria-hidden="true">07</span>
                 <h3>Apartment 2+1, Vlorë</h3>
                 <p>INTERIOR · 2024</p>
               </div></a
             >
-          </article>
-        </div>
-        <div class="project-row">
-          <article class="project">
+          </article><article data-category="infrastructure" class="project">
             <a
               class="project-link"
               href="./assets/fier-01-2400-c8257838.webp"
@@ -287,13 +265,12 @@
                   >View project · 8 images ↗</span
                 >
               </div>
-              <div class="project-caption">
+              <div class="project-caption"><span class="project-number" aria-hidden="true">08</span>
                 <h3>Waste Management Site, Fier</h3>
                 <p>MODELING &amp; VISUALIZATION · 2026</p>
               </div></a
             >
-          </article>
-          <article class="project">
+          </article><article data-category="infrastructure" class="project">
             <a
               class="project-link"
               href="./assets/water-01-1920-8ce13fea.webp"
@@ -303,21 +280,20 @@
                   >View project · 10 images ↗</span
                 >
               </div>
-              <div class="project-caption">
+              <div class="project-caption"><span class="project-number" aria-hidden="true">09</span>
                 <h3>
                   Water Supply Network Expansion &amp; Detailed Design, Tiranë
                 </h3>
                 <p>VISUALIZATION · 2026</p>
               </div></a
             >
-          </article>
-        </div>
+          </article></div>
       </section>
       <section class="services" id="services" aria-labelledby="services-title">
         <div class="container services-layout">
           <div>
-            <p class="eyebrow">03 — SERVICES</p>
-            <h2 id="services-title">From first line<br />to lived space.</h2>
+            <p class="eyebrow">03 / OUR PRACTICE</p>
+            <h2 id="services-title">A complete<br /><em>perspective.</em></h2><p class="services-intro">From the first idea to the details that make a place feel considered.</p>
           </div>
           <div class="service-list">
             <a
@@ -345,11 +321,11 @@
       </section>
       <footer class="contact" id="contact">
         <div class="container">
-          <p class="eyebrow">04 — CONTACT</p>
+          <p class="eyebrow">04 / START A CONVERSATION</p>
           <div class="contact-layout">
-            <h2>Let’s build something<br />that belongs.</h2>
+            <h2>Have a place<br /><em>in mind?</em></h2>
             <div class="contact-email">
-              <p class="micro">NEW PROJECTS</p>
+              <p class="micro">TELL US ABOUT YOUR PROJECT</p>
               <a href="mailto:glejdisresulaj@gmail.com"
                 >glejdisresulaj@gmail.com <span aria-hidden="true">↗</span></a
               >

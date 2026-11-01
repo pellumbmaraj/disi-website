@@ -30,6 +30,53 @@ document.addEventListener("click", (event) => {
 });
 matchMedia("(min-width: 700px)").addEventListener("change", closeMenu);
 
+const header = $(".site-header");
+if ("IntersectionObserver" in window) {
+  const headerObserver = new IntersectionObserver(([entry]) => {
+    header.classList.toggle("is-scrolled", entry.intersectionRatio < 0.85);
+  }, { threshold: [0, 0.85] });
+  headerObserver.observe($(".hero"));
+} else header.classList.add("is-scrolled");
+
+const projectGrid = $("#project-grid");
+const projects = [...projectGrid.querySelectorAll(".project")];
+const filters = [...document.querySelectorAll("[data-filter]")];
+filters.forEach(button => button.addEventListener("click", () => {
+  const selected = button.dataset.filter;
+  filters.forEach(filter => filter.setAttribute("aria-pressed", String(filter === button)));
+  projectGrid.classList.toggle("is-filtered", selected !== "all");
+  let count = 0;
+  projects.forEach(project => {
+    project.hidden = selected !== "all" && project.dataset.category !== selected;
+    project.classList.remove("reveal-pending");
+    if (!project.hidden) count++;
+  });
+  $("#project-results").textContent = `${count} projects shown.`;
+}));
+
+// Reveal below-the-fold content once; no scroll loop or continuous GPU work.
+const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+if ("IntersectionObserver" in window && !motionPreference.matches) {
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.remove("reveal-pending");
+      revealObserver.unobserve(entry.target);
+    });
+  }, { rootMargin: "0px 0px -24px 0px", threshold: 0.05 });
+  const sections = [...document.querySelectorAll(".studio-layout, .project, .services-layout")];
+  sections.forEach(section => {
+    if (section.getBoundingClientRect().top < innerHeight) return;
+    section.classList.add("reveal-pending");
+    revealObserver.observe(section);
+  });
+  motionPreference.addEventListener("change", event => {
+    if (!event.matches) return;
+    revealObserver.disconnect();
+    sections.forEach(section => section.classList.remove("reveal-pending"));
+  });
+}
+
 attachProjectGallery();
 
 const hero = $(".hero");
