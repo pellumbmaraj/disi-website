@@ -10,7 +10,7 @@ test("Pages output resolves every asset under the repository path", async () => 
   const html = await readFile("pages/index.html", "utf8");
   const page = new URL("https://example.github.io/disi-website/");
   assert.ok(html.includes(`href="${page.href}"`));
-  assert.ok(html.includes(`content="${page.href}assets/iconic-1600.webp"`));
+  assert.match(html, /property="og:image"\s+content="https:\/\/example.github.io\/disi-website\/assets\/iconic-01-1920-[a-f0-9]{8}\.webp"/);
   const references = [...html.matchAll(/(?:src|href)="((?:\.{1,2}\/|\/)[^"#]+)"/g)].map(m => m[1]);
   for (const match of html.matchAll(/srcset="([^"]+)"/g))
     for (const image of match[1].split(",")) references.push(image.trim().split(/\s/)[0]);
@@ -27,8 +27,11 @@ test("Pages output resolves every asset under the repository path", async () => 
   assert.match(html, /connect-src 'self'/);
   assert.ok(html.includes(`styles.css?v=${version}`));
   const app = await readFile("pages/app.js", "utf8");
-  for (const file of ["drag-pan.js", "panorama.js", "freshness.js"])
+  for (const file of ["drag-pan.js", "panorama.js", "freshness.js", "gallery.js"])
     assert.ok(app.includes(`./${file}?v=${version}`), file);
+  const gallery = await readFile("pages/gallery.js", "utf8");
+  assert.ok(gallery.includes(`./project-images.js?v=${version}`));
+  assert.ok((await stat("pages/project-images.js")).isFile());
   execFileSync(process.execPath, ["scripts/prepare-pages.mjs"]);
   assert.ok((await readFile("pages/index.html", "utf8")).includes(`app.js?v=${version}`));
   const panorama = await readFile("pages/panorama.js", "utf8");
