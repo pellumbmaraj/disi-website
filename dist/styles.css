@@ -938,8 +938,8 @@ canvas:focus-visible {
     max-height: 95dvh;
   }
   .dialog-image {
-    height: min(48vh, calc(95vh - 360px));
-    height: min(48dvh, calc(95dvh - 360px));
+    height: min(calc((100vw - 52px) * 0.75), 48vh, calc(95vh - 360px));
+    height: min(calc((100vw - 52px) * 0.75), 48dvh, calc(95dvh - 360px));
   }
   .dialog-caption {
     display: block;
