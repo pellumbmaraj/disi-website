@@ -1,4 +1,5 @@
 import { attachDragPan } from "./drag-pan.js";
+import { attachProjectGallery } from "./gallery.js";
 import { watchForUpdates } from "./freshness.js";
 
 watchForUpdates();
@@ -29,72 +30,7 @@ document.addEventListener("click", (event) => {
 });
 matchMedia("(min-width: 700px)").addEventListener("change", closeMenu);
 
-const projectLinks = [...document.querySelectorAll("[data-project]")];
-const dialog = $(".project-dialog");
-let projectIndex = 0;
-let returnFocus;
-let previousOverflow;
-function showProject(index) {
-  projectIndex = (index + projectLinks.length) % projectLinks.length;
-  const link = projectLinks[projectIndex];
-  const title = link.querySelector("h3").textContent;
-  $("#dialog-img").src = link.href;
-  $("#dialog-img").alt = link.querySelector("img").alt;
-  $("#dialog-title").textContent = title;
-  $("#dialog-meta").textContent =
-    link.querySelector(".project-caption p").textContent;
-  $("#dialog-counter").textContent =
-    `${String(projectIndex + 1).padStart(2, "0")} / ${String(projectLinks.length).padStart(2, "0")}`;
-  $("#dialog-inquiry").href =
-    `mailto:glejdisresulaj@gmail.com?subject=${encodeURIComponent(`Project inquiry — ${title}`)}`;
-}
-projectLinks.forEach((link, index) =>
-  link.addEventListener("click", (event) => {
-    if (
-      event.metaKey ||
-      event.ctrlKey ||
-      event.shiftKey ||
-      event.altKey ||
-      !dialog.showModal
-    )
-      return;
-    event.preventDefault();
-    returnFocus = link;
-    showProject(index);
-    previousOverflow = document.body.style.overflow;
-    dialog.showModal();
-    document.body.style.overflow = "hidden";
-    $(".dialog-close").focus();
-  }),
-);
-$(".dialog-close").addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", (event) => {
-  if (event.target !== dialog) return;
-  const rect = dialog.getBoundingClientRect();
-  if (
-    event.clientX < rect.left ||
-    event.clientX > rect.right ||
-    event.clientY < rect.top ||
-    event.clientY > rect.bottom
-  )
-    dialog.close();
-});
-dialog.addEventListener("close", () => {
-  document.body.style.overflow = previousOverflow || "";
-  returnFocus?.focus({ preventScroll: true });
-});
-dialog.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowRight") {
-    event.preventDefault();
-    showProject(projectIndex + 1);
-  }
-  if (event.key === "ArrowLeft") {
-    event.preventDefault();
-    showProject(projectIndex - 1);
-  }
-});
-$(".previous").addEventListener("click", () => showProject(projectIndex - 1));
-$(".next").addEventListener("click", () => showProject(projectIndex + 1));
+attachProjectGallery();
 
 const hero = $(".hero");
 const explore = $(".explore");

@@ -116,6 +116,9 @@ canvas:focus-visible {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
+.hero.viewer-active .hero-image {
+  visibility: hidden;
+}
 .hero:after {
   content: "";
   position: absolute;
@@ -146,7 +149,7 @@ canvas:focus-visible {
 }
 .brand img {
   width: 76px;
-  height: 86px;
+  height: auto;
 }
 .site-header nav {
   display: flex;
@@ -364,6 +367,10 @@ canvas:focus-visible {
   object-fit: cover;
   transition: transform 0.5s ease;
 }
+.project-image.is-board img {
+  object-fit: contain;
+  background: white;
+}
 .featured .project-image {
   aspect-ratio: 2.09;
 }
@@ -373,8 +380,10 @@ canvas:focus-visible {
 .project-row .project:last-child .project-image {
   aspect-ratio: 1.27;
 }
-.project-link:hover .project-image img {
-  transform: scale(1.025);
+@media (hover: hover) and (pointer: fine) {
+  .project-link:hover .project-image img {
+    transform: scale(1.025);
+  }
 }
 .view-project {
   position: absolute;
@@ -545,8 +554,7 @@ canvas:focus-visible {
   overscroll-behavior: contain;
 }
 .project-dialog::backdrop {
-  background: #14252ce0;
-  backdrop-filter: blur(5px);
+  background: #14252cf2;
 }
 .dialog-toolbar {
   display: flex;
@@ -573,17 +581,35 @@ canvas:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
+  height: min(58vh, calc(94vh - 325px));
+  height: min(58dvh, calc(94dvh - 325px));
+  min-height: 180px;
   background: #e4e1dc;
+  touch-action: pan-y pinch-zoom;
 }
 .dialog-image img {
-  max-height: 58dvh;
+  max-height: 100%;
   width: auto;
   height: auto;
   object-fit: contain;
   max-width: 100%;
   margin: auto;
+  animation: gallery-image-enter 160ms ease-out;
 }
+@keyframes gallery-image-enter {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+.gallery-status,
+.gallery-photo-caption {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 12px 0 0;
+  color: var(--muted);
+}
+.gallery-status:empty { display: none; }
+.dialog-nav button:disabled { opacity: 0.4; cursor: default; }
+.dialog-nav a { font-size: 12px; padding: 12px 0; text-decoration: underline; }
 .dialog-caption {
   display: flex;
   align-items: center;
@@ -710,7 +736,7 @@ canvas:focus-visible {
   }
   .brand img {
     width: 58px;
-    height: 68px;
+    height: auto;
   }
   .site-header nav {
     display: none;
@@ -911,8 +937,9 @@ canvas:focus-visible {
     padding: 16px;
     max-height: 95dvh;
   }
-  .dialog-image img {
-    max-height: 55dvh;
+  .dialog-image {
+    height: min(48vh, calc(95vh - 360px));
+    height: min(48dvh, calc(95dvh - 360px));
   }
   .dialog-caption {
     display: block;
