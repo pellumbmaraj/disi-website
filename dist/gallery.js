@@ -28,9 +28,24 @@ export function attachProjectGallery() {
   const previous = $(".previous"), next = $(".next");
   const loader = createGalleryLoader();
   let photos = [], selected = 0, returnFocus, previousOverflow, opening = 0;
-  let loading = false, swipe;
+  let loading = false, swipe, retiring, fadeTimer, closeTimer, closing = false;
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const mobile = () => matchMedia("(max-width: 699px)").matches;
   function controls() { previous.disabled = next.disabled = loading || photos.length < 2; }
+  function clearPrevious() {
+    clearTimeout(fadeTimer);
+    retiring?.remove();
+    retiring = undefined;
+  }
+  function closeGallery() {
+    if (closing || !dialog.open) return;
+    opening++;
+    loader.cancel();
+    if (reducedMotion.matches) { dialog.close(); return; }
+    closing = true;
+    dialog.classList.add("is-closing");
+    closeTimer = setTimeout(() => dialog.close(), 180);
+  }
   async function showPhoto(index) {
     selected = (index + photos.length) % photos.length;
     const photo = photos[selected];
@@ -43,12 +58,22 @@ export function attachProjectGallery() {
     $("#dialog-photo-caption").textContent = photo.alt;
     try {
       const image = await loader.load(photo, mobile());
-      if (!image || !dialog.open) return;
+      if (!image || !dialog.open || closing) return;
+      clearPrevious();
+      const current = $("#dialog-img");
       image.id = "dialog-img";
-      $("#dialog-img").replaceWith(image);
+      if (!current.hidden && current.naturalWidth && !reducedMotion.matches) {
+        current.style.opacity = getComputedStyle(current).opacity;
+        current.removeAttribute("id");
+        current.setAttribute("aria-hidden", "true");
+        current.classList.add("gallery-previous");
+        retiring = current;
+        frame.append(image);
+        fadeTimer = setTimeout(clearPrevious, 340);
+      } else current.replaceWith(image);
       $("#dialog-status").textContent = "";
     } catch {
-      if (!dialog.open) return;
+      if (!dialog.open || closing) return;
       $("#dialog-status").textContent = "This image could not load. Try the next image or open the full image.";
     }
     loading = false;
@@ -58,6 +83,7 @@ export function attachProjectGallery() {
   links.forEach(link => link.addEventListener("click", async event => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !dialog.showModal) return;
     event.preventDefault();
+    if (dialog.open) return;
     const request = ++opening;
     returnFocus = link;
     const card = link.querySelector("img"), title = link.querySelector("h3").textContent.trim();
@@ -83,15 +109,20 @@ export function attachProjectGallery() {
     }
     showPhoto(0);
   }));
-  $(".dialog-close").addEventListener("click", () => dialog.close());
+  $(".dialog-close").addEventListener("click", closeGallery);
+  dialog.addEventListener("cancel", event => { event.preventDefault(); closeGallery(); });
   dialog.addEventListener("click", event => {
     if (event.target !== dialog) return;
     const rect = dialog.getBoundingClientRect();
-    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeGallery();
   });
   dialog.addEventListener("close", () => {
     opening++;
     loader.cancel();
+    clearTimeout(closeTimer);
+    clearPrevious();
+    closing = false;
+    dialog.classList.remove("is-closing");
     photos = [];
     swipe = undefined;
     // Release the decoded image after closing rather than keeping a large
@@ -103,7 +134,7 @@ export function attachProjectGallery() {
     document.body.style.overflow = previousOverflow || "";
     returnFocus?.focus({ preventScroll: true });
   });
-  const move = delta => { if (!loading && photos.length > 1) showPhoto(selected + delta); };
+  const move = delta => { if (!loading && !closing && photos.length > 1) showPhoto(selected + delta); };
   previous.addEventListener("click", () => move(-1));
   next.addEventListener("click", () => move(1));
   dialog.addEventListener("keydown", event => {
