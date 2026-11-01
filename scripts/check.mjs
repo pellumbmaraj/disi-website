@@ -2,6 +2,7 @@ import { readFile, stat } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { projectImages } from "../dist/project-images.js";
 const root = fileURLToPath(new URL("../dist/", import.meta.url));
 const html = await readFile(path.join(root, "index.html"), "utf8");
 const css = await readFile(path.join(root, "styles.css"), "utf8");
@@ -17,10 +18,15 @@ for (const match of js.matchAll(/from\s+["'](\.\/[^"']+)["']/g)) files.add(match
 // Include on-demand assets that aren't referenced in the HTML.
 for (const match of (js + panorama).matchAll(/["']((?:\.\/|\/)assets\/[^"']+)["']/g))
   files.add(match[1]);
+for (const photos of Object.values(projectImages)) for (const photo of photos) {
+  files.add(photo.src);
+  files.add(photo.preview);
+  for (const source of photo.srcset.split(",")) files.add(source.trim().split(/\s/)[0]);
+}
 for (const file of files)
   if (!(await stat(path.join(root, file))).isFile())
     throw new Error(`Missing: ${file}`);
-for (const file of ["app.js", "panorama.js", "drag-pan.js", "freshness.js"]) {
+for (const file of ["app.js", "panorama.js", "drag-pan.js", "freshness.js", "gallery.js", "project-images.js"]) {
   const result = spawnSync(
     process.execPath,
     ["--check", path.join(root, file)],
