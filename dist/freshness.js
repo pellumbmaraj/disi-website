@@ -1,6 +1,6 @@
 // GitHub Pages controls the HTML cache lifetime. A cached page can still ask
 // for the current release and refresh itself without changing the public link.
-export function watchForUpdates({ page = window, doc = document, load = fetch } = {}) {
+export function watchForUpdates({ page = window, doc = document, load = fetch, isBusy = () => false } = {}) {
   const version = doc.querySelector('meta[name="site-version"]')?.content;
   const valid = value => typeof value === "string" && /^[a-f0-9]{12}$/.test(value);
   if (!valid(version)) return; // Unbuilt local previews have no release manifest.
@@ -28,6 +28,8 @@ export function watchForUpdates({ page = window, doc = document, load = fetch } 
       const latest = (await response.json()).version;
       // The marker also stops a reload loop if an edge serves old HTML once.
       if (!valid(latest) || latest === version || latest === attempted) return;
+      // Someone is mid-gallery or mid-panorama: wait for the next visit.
+      if (isBusy()) return;
       const next = new URL(page.location.href);
       next.searchParams.set("__site_update", latest);
       refreshing = true;

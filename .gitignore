@@ -4,3 +4,4 @@ pages/
 .sites-local/
 *.tar.gz
 *.zip
+extra/

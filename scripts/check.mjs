@@ -1,4 +1,4 @@
-import { readFile, stat } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -18,6 +18,8 @@ for (const match of js.matchAll(/from\s+["'](\.\/[^"']+)["']/g)) files.add(match
 // Include on-demand assets that aren't referenced in the HTML.
 for (const match of (js + panorama).matchAll(/["']((?:\.\/|\/)assets\/[^"']+)["']/g))
   files.add(match[1]);
+// Fonts and any other stylesheet assets.
+for (const match of css.matchAll(/url\("?(\.\/[^")]+)"?\)/g)) files.add(match[1]);
 for (const photos of Object.values(projectImages)) for (const photo of photos) {
   files.add(photo.src);
   files.add(photo.preview);
@@ -26,7 +28,7 @@ for (const photos of Object.values(projectImages)) for (const photo of photos) {
 for (const file of files)
   if (!(await stat(path.join(root, file))).isFile())
     throw new Error(`Missing: ${file}`);
-for (const file of ["app.js", "panorama.js", "drag-pan.js", "freshness.js", "gallery.js", "project-images.js"]) {
+for (const file of ["app.js", "panorama.js", "drag-pan.js", "freshness.js", "gallery.js", "i18n.js", "project-images.js", "theme.js"]) {
   const result = spawnSync(
     process.execPath,
     ["--check", path.join(root, file)],
@@ -43,8 +45,22 @@ for (const tag of html.matchAll(/<img\b[^>]*>/g))
     !/\bheight=/.test(tag[0])
   )
     throw new Error(`Missing image accessibility or dimensions: ${tag[0]}`);
-if (/on(?:click|load|error)=|<script(?![^>]*src)/.test(html))
+if (/on(?:click|load|error)=|<script(?![^>]*(?:src=|type="application\/ld\+json"))/.test(html))
   throw new Error("Inline script is not permitted");
+for (const match of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g))
+  JSON.parse(match[1]);
+// Every shipped asset must be used and carry a content fingerprint, so
+// visitors never download dead weight or reuse a stale cached copy.
+const used = new Set([...files].filter(file => file.includes("assets/")).map(file => path.basename(file)));
+for (const match of html.matchAll(/assets\/([^"\s)]+)/g)) used.add(match[1]);
+for (const file of await readdir(path.join(root, "assets"))) {
+  if (!used.has(file)) throw new Error(`Unused asset: ${file}`);
+  if (!/-[a-f0-9]{8}\.[a-z0-9]+$/.test(file)) throw new Error(`Asset without fingerprint: ${file}`);
+}
+const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
+if (new Set(ids).size !== ids.length) throw new Error("Duplicate element id");
+const titles = [...html.matchAll(/<h3>\s*([^<]+?)\s*<\/h3>/g)].map(match => match[1]);
+if (new Set(titles).size !== titles.length) throw new Error("Two projects share a title");
 if (!css.includes("prefers-reduced-motion"))
   throw new Error("Reduced motion support missing");
 if (!html.includes("Content-Security-Policy"))

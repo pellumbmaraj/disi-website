@@ -5,8 +5,8 @@ import { createHash } from "node:crypto";
 import { createGalleryLoader } from "../dist/gallery.js";
 import { projectImages } from "../dist/project-images.js";
 
-test("all 75 supplied photographs have bounded, correctly sized and fingerprinted WebP exports", async () => {
-  assert.deepEqual(Object.values(projectImages).map(photos => photos.length), [15, 2, 5, 17, 13, 5, 8, 10]);
+test("all 82 project images have bounded, correctly sized and fingerprinted WebP exports", async () => {
+  assert.deepEqual(Object.values(projectImages).map(photos => photos.length), [15, 2, 7, 5, 17, 13, 5, 8, 10]);
   const seen = new Set();
   let total = 0;
   for (const photos of Object.values(projectImages)) for (const photo of photos) {
@@ -31,7 +31,7 @@ test("all 75 supplied photographs have bounded, correctly sized and fingerprinte
     }
     assert.ok(sizes.includes(photo.preview) && sizes.includes(photo.src));
   }
-  assert.equal(seen.size, 75);
+  assert.equal(seen.size, 82);
   assert.ok(total < 31e6);
 });
 

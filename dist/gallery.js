@@ -1,3 +1,5 @@
+import { t } from "./i18n.js";
+
 // Decode before displaying a new image; a closed or superseded request cannot
 // replace the current picture. Mobile uses a bounded 960px preview.
 export function createGalleryLoader(makeImage = () => new Image()) {
@@ -7,7 +9,7 @@ export function createGalleryLoader(makeImage = () => new Image()) {
     async load(photo, mobile = false) {
       const request = ++revision;
       const image = makeImage();
-      image.alt = photo.alt;
+      image.alt = t(photo.alt);
       image.width = photo.width;
       image.height = photo.height;
       image.decoding = "async";
@@ -27,6 +29,9 @@ export function attachProjectGallery() {
   const dialog = $(".project-dialog"), frame = $(".dialog-image");
   const previous = $(".previous"), next = $(".next");
   const loader = createGalleryLoader();
+  // The studio address lives once in the HTML; project inquiries reuse it.
+  const inquiry = $("#dialog-inquiry").getAttribute("href").split("?")[0];
+  let openSlug;
   let photos = [], selected = 0, returnFocus, previousOverflow, opening = 0;
   let loading = false, swipe, retiring, fadeTimer, closeTimer, closing = false;
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -52,10 +57,10 @@ export function attachProjectGallery() {
     loading = true;
     controls();
     frame.setAttribute("aria-busy", "true");
-    $("#dialog-status").textContent = "Loading image…";
+    $("#dialog-status").textContent = t("Loading image…");
     $("#dialog-counter").textContent = `${String(selected + 1).padStart(2, "0")} / ${String(photos.length).padStart(2, "0")}`;
     $("#dialog-original").href = photo.src;
-    $("#dialog-photo-caption").textContent = photo.alt;
+    $("#dialog-photo-caption").textContent = t(photo.alt);
     try {
       const image = await loader.load(photo, mobile());
       if (!image || !dialog.open || closing) return;
@@ -74,24 +79,37 @@ export function attachProjectGallery() {
       $("#dialog-status").textContent = "";
     } catch {
       if (!dialog.open || closing) return;
-      $("#dialog-status").textContent = "This image could not load. Try the next image or open the full image.";
+      $("#dialog-status").textContent = t("This image could not load. Try the next image or open the full image.");
     }
     loading = false;
     frame.setAttribute("aria-busy", "false");
     controls();
   }
-  links.forEach(link => link.addEventListener("click", async event => {
+  links.forEach(link => link.addEventListener("click", event => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !dialog.showModal) return;
     event.preventDefault();
+    openProject(link);
+  }));
+  // Each project has a shareable address such as #apartment-durres.
+  function openFromAddress() {
+    const slug = decodeURIComponent(location.hash.slice(1));
+    const link = slug && links.find(item => item.dataset.slug === slug);
+    if (link && dialog.showModal && !dialog.open) openProject(link, false);
+  }
+  addEventListener("hashchange", openFromAddress);
+  openFromAddress();
+  async function openProject(link, updateAddress = true) {
     if (dialog.open) return;
     const request = ++opening;
+    openSlug = link.dataset.slug;
+    if (updateAddress && openSlug) history.replaceState(history.state, "", `#${openSlug}`);
     returnFocus = link;
     const card = link.querySelector("img"), title = link.querySelector("h3").textContent.trim();
     $("#dialog-title").textContent = title;
     $("#dialog-meta").textContent = link.querySelector(".project-caption p").textContent;
-    $("#dialog-inquiry").href = `mailto:glejdisresulaj@gmail.com?subject=${encodeURIComponent(`Project inquiry — ${title}`)}`;
+    $("#dialog-inquiry").href = `${inquiry}?subject=${encodeURIComponent(`${t("Project inquiry — ")}${title}`)}`;
     $("#dialog-img").hidden = true;
-    $("#dialog-status").textContent = "Loading project…";
+    $("#dialog-status").textContent = t("Loading project…");
     previousOverflow = document.body.style.overflow;
     dialog.showModal();
     document.body.style.overflow = "hidden";
@@ -108,7 +126,7 @@ export function attachProjectGallery() {
       photos = fallback;
     }
     showPhoto(0);
-  }));
+  }
   $(".dialog-close").addEventListener("click", closeGallery);
   dialog.addEventListener("cancel", event => { event.preventDefault(); closeGallery(); });
   dialog.addEventListener("click", event => {
@@ -133,6 +151,8 @@ export function attachProjectGallery() {
     image.hidden = true;
     document.body.style.overflow = previousOverflow || "";
     returnFocus?.focus({ preventScroll: true });
+    if (openSlug && location.hash === `#${openSlug}`) history.replaceState(history.state, "", location.pathname + location.search);
+    openSlug = undefined;
   });
   const move = delta => { if (!loading && !closing && photos.length > 1) showPhoto(selected + delta); };
   previous.addEventListener("click", () => move(-1));

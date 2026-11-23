@@ -28,7 +28,7 @@ test("page loads with restrictive security headers", async () => {
   assert.match(await response.text(), /GR Architecture/);
 });
 test("HEAD returns metadata without a response body", async () => {
-  const response = await fetch(origin + "/assets/hero-960.webp", {
+  const response = await fetch(origin + "/assets/durres-01-960-572d0151.webp", {
     method: "HEAD",
   });
   assert.equal(response.status, 200);
@@ -64,7 +64,7 @@ test("encoded paths and hidden project files cannot escape the static root", asy
 test("HTML and assets receive appropriate cache policies", async () => {
   assert.equal((await fetch(origin)).headers.get("cache-control"), "no-cache");
   assert.equal(
-    (await fetch(origin + "/assets/hero-960.webp")).headers.get(
+    (await fetch(origin + "/assets/durres-01-960-572d0151.webp")).headers.get(
       "cache-control",
     ),
     "public, max-age=86400",

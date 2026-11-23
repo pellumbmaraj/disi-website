@@ -107,7 +107,7 @@ export async function createPanorama(canvas, onExit) {
     if (!gl.getProgramParameter(program, gl.LINK_STATUS))
       throw new Error("Unable to initialize panorama.");
     const image = new Image();
-    image.src = new URL("./assets/panorama-4096.webp", import.meta.url).href;
+    image.src = new URL("./assets/panorama-4096-909204c3.webp", import.meta.url).href;
     await image.decode();
     if (gl.isContextLost()) throw new Error("Graphics context unavailable.");
     const max = Math.min(gl.getParameter(gl.MAX_TEXTURE_SIZE), mobile ? 2048 : 4096);

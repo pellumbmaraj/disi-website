@@ -140,6 +140,64 @@ export const projectImages = {
       "preview": "./assets/house-02-960-c9ac2220.webp"
     }
   ],
+  "2": [
+    {
+      "src": "./assets/durres-01-1600-6305694f.webp",
+      "srcset": "./assets/durres-01-480-bb98072a.webp 480w, ./assets/durres-01-960-572d0151.webp 960w, ./assets/durres-01-1600-6305694f.webp 1600w",
+      "width": 1600,
+      "height": 900,
+      "alt": "Durrës apartment with a white sofa, timber accents and integrated television wall",
+      "preview": "./assets/durres-01-960-572d0151.webp"
+    },
+    {
+      "src": "./assets/durres-02-1920-1b90148d.webp",
+      "srcset": "./assets/durres-02-960-24faf3a5.webp 960w, ./assets/durres-02-1920-1b90148d.webp 1920w",
+      "width": 1920,
+      "height": 1080,
+      "alt": "Living room with corner sofa, media wall and timber screen",
+      "preview": "./assets/durres-02-960-24faf3a5.webp"
+    },
+    {
+      "src": "./assets/durres-03-1920-1c52e787.webp",
+      "srcset": "./assets/durres-03-960-e3ae5775.webp 960w, ./assets/durres-03-1920-1c52e787.webp 1920w",
+      "width": 1920,
+      "height": 1080,
+      "alt": "Living room detail with floating media unit and family on the sofa",
+      "preview": "./assets/durres-03-960-e3ae5775.webp"
+    },
+    {
+      "src": "./assets/durres-04-1920-d368f208.webp",
+      "srcset": "./assets/durres-04-960-5099a6d6.webp 960w, ./assets/durres-04-1920-d368f208.webp 1920w",
+      "width": 1920,
+      "height": 1080,
+      "alt": "Living room from the window toward the entrance",
+      "preview": "./assets/durres-04-960-5099a6d6.webp"
+    },
+    {
+      "src": "./assets/durres-05-1920-44e70888.webp",
+      "srcset": "./assets/durres-05-960-8e9eed93.webp 960w, ./assets/durres-05-1920-44e70888.webp 1920w",
+      "width": 1920,
+      "height": 1080,
+      "alt": "Galley kitchen and round dining table",
+      "preview": "./assets/durres-05-960-8e9eed93.webp"
+    },
+    {
+      "src": "./assets/durres-06-1920-a01fb59d.webp",
+      "srcset": "./assets/durres-06-960-161317f1.webp 960w, ./assets/durres-06-1920-a01fb59d.webp 1920w",
+      "width": 1920,
+      "height": 1080,
+      "alt": "Dining corner with pendant lights and timber mirror",
+      "preview": "./assets/durres-06-960-161317f1.webp"
+    },
+    {
+      "src": "./assets/durres-07-1920-0ce8d345.webp",
+      "srcset": "./assets/durres-07-960-1d560142.webp 960w, ./assets/durres-07-1920-0ce8d345.webp 1920w",
+      "width": 1920,
+      "height": 1080,
+      "alt": "Bedroom with timber headboard and floating bedside shelves",
+      "preview": "./assets/durres-07-960-1d560142.webp"
+    }
+  ],
   "3": [
     {
       "src": "./assets/elbasan-01-2400-df5a5caa.webp",

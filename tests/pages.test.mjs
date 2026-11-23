@@ -21,6 +21,11 @@ test("Pages output resolves every asset under the repository path", async () => 
     assert.ok((await stat("pages/" + resolved.pathname.slice("/disi-website/".length))).isFile());
   }
   assert.doesNotMatch(html, /(?:src|href)="\/(?!\/)/);
+  assert.doesNotMatch(html, /pellumbmaraj\.github\.io/);
+  const data = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+  assert.equal(data.url, page.href);
+  assert.match(await readFile("pages/robots.txt", "utf8"), /Sitemap: https:\/\/example\.github\.io\/disi-website\/sitemap\.xml/);
+  assert.ok((await readFile("pages/sitemap.xml", "utf8")).includes(`<loc>${page.href}</loc>`));
   const version = html.match(/app\.js\?v=([a-f0-9]{12})/)[1];
   assert.ok(html.includes(`name="site-version" content="${version}"`));
   assert.equal(JSON.parse(await readFile("pages/version.json", "utf8")).version, version);
@@ -36,5 +41,6 @@ test("Pages output resolves every asset under the repository path", async () => 
   assert.ok((await readFile("pages/index.html", "utf8")).includes(`app.js?v=${version}`));
   const panorama = await readFile("pages/panorama.js", "utf8");
   const asset = panorama.match(/new URL\("([^"\s]+)", import.meta.url\)/)[1];
-  assert.equal(new URL(asset, new URL("panorama.js", page)).href, `${page.href}assets/panorama-4096.webp`);
+  assert.match(asset, /^\.\/assets\/panorama-4096-[a-f0-9]{8}\.webp$/);
+  assert.equal(new URL(asset, new URL("panorama.js", page)).href, page.href + asset.slice(2));
 });

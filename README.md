@@ -1,96 +1,89 @@
-# GR Architecture portfolio
+# GR Architecture
 
-Complete, locally runnable implementation of the architecture portfolio discussed in the [shared conversation](https://chatgpt.com/s/cx_6aca0eaed3e08191bdc79bb211eb4414). The original implementation and optimized Figma assets have been brought into this repository.
+Portfolio website for GR Architecture, an architecture and design studio in Tiranë, Albania.
 
-## Run
+A static site with no build step, no dependencies, no cookies, no analytics and no third-party requests. It needs Node.js 20 or newer only for the local server, checks and tests.
 
-Requires Node.js 20 or newer. No package installation is needed.
-
-```sh
-npm run dev
-```
-
-Open `http://127.0.0.1:4173`. Use `PORT=4180 npm run dev` to choose another port. `npm start` runs the same server.
+## Quick start
 
 ```sh
-npm run build
-npm test
+npm run dev      # http://127.0.0.1:4173 (PORT=4180 npm run dev for another port)
+npm run check    # validate references, images, metadata and assets
+npm test         # run the test suite
 ```
 
-`build` validates the ready-to-deploy `dist/` directory; this site needs no compilation. `check` runs the same validation. Tests check HTTP behavior, security headers, caching and path containment.
+## Project structure
 
-## Included
-
-- Full responsive portfolio: immersive hero, studio introduction, nine projects, four services and contact details.
-- Project-specific galleries with 75 supplied October 2026 photographs across eight projects; the existing Durrës cover remains available as a one-image gallery. Galleries support previous/next controls, keyboard navigation, touch swipes, full-image links, modal focus handling and project-specific email inquiries.
-- WebGL 360° panorama that activates and pans with the first mouse drag or horizontal touch swipe, with keyboard zoom, reset and fullscreen where supported. Movement made while loading is preserved. Active touch gestures stay in the viewer, follow the finger directly and rotate 180° per full-width swipe. Tap 360° to close the viewer and scroll the page again.
-- Supplied SVG branding and original imagery in locally hosted responsive WebP sizes, lazy loading and explicit image dimensions.
-- Accessible navigation, image descriptions, focus indicators and reduced-motion support.
-- Restrictive content security policy, MIME protection, framing protection and privacy permissions policy.
-
-Instagram and LinkedIn links remain omitted, following the conversation's explicit preference. Contact and service links open an email app; there is no server-side contact form.
-
-## Edit
-
-| File | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `dist/index.html` | Content, project titles, email, metadata and image references |
-| `dist/styles.css` | Branding and responsive layouts |
-| `dist/app.js` | Navigation, gallery and viewer activation |
-| `dist/gallery.js` | Decode-before-display galleries with bounded phone previews |
-| `dist/project-images.js` | Project image order, alt descriptions and responsive asset URLs |
-| `dist/panorama.js` | On-demand perspective panorama renderer |
-| `dist/drag-pan.js` | First-gesture activation and touch scrolling behavior |
-| `dist/freshness.js` | Automatic release checks on opening or restoring the page |
-| `dist/assets/` | Optimized imagery, supplied GR logo and retained panorama |
-| `scripts/serve.mjs` | Loopback-only local server with security headers |
+| `dist/index.html` | All page content: hero, studio, projects, services, contact, metadata |
+| `dist/styles.css` | Design tokens, fonts, section styles and responsive layout, in numbered sections |
+| `dist/app.js` | Navigation, project filters, reveal animation and 360° viewer activation |
+| `dist/theme.js` | Applies a saved light/dark choice before the page is drawn |
+| `dist/i18n.js` | Albanian translations and the EN / SQ language switch |
+| `dist/gallery.js` | Project gallery dialog and shareable project links |
+| `dist/project-images.js` | Gallery images per project: order, descriptions and responsive files |
+| `dist/panorama.js` | WebGL 360° panorama of the hotel, loaded on demand |
+| `dist/drag-pan.js` | Mouse and touch gestures for the panorama |
+| `dist/freshness.js` | Picks up new releases automatically when a visitor returns |
+| `dist/assets/` | Logo, icons and optimized WebP imagery |
+| `scripts/` | Local server, validation and GitHub Pages preparation |
+| `tests/` | Node test suite |
 
-Keep image dimensions and responsive `srcset` attributes when replacing imagery. The panorama uses a textured sphere so each pixel only samples the image, without inverse trigonometry. Phones use a maximum 2048-pixel texture and 450,000 render pixels; desktop keeps the original texture and up to one million render pixels. Sustained slow display frames reduce resolution automatically. Idle frames do not redraw, and animation stops after release once the view settles. Desktop retains short smoothing; touch is immediate.
+## Features
 
-Keyboard controls: gallery Left/Right to navigate, Escape to close; panorama arrows to pan, +/− to zoom, Home to reset and Escape to exit. Vertical touch swipes scroll the page while the viewer is closed. Once open, swipes rotate in both directions; the 360° toggle restores scrolling.
+- Sections: hero with 360° view, studio facts, studio introduction, "From site to keys" process (with the studio poster), selected work, services and contact.
+- Self-hosted Inter, Inter Display and EB Garamond Italic fonts (SIL Open Font License), subset to Latin and Albanian characters.
+- English and Albanian, switchable from the header.
+- Light and dark themes: follows the device setting, with a header toggle that is remembered.
+- Service cards that show the matching projects or open a pre-filled email.
+- Nine projects in three categories (architecture, interiors, infrastructure) with filters, counts generated from the page itself.
+- A gallery for every project with keyboard, swipe and button navigation. Each project has its own link, for example `…/#apartment-durres`, which opens its gallery directly.
+- A 360° panorama in the hero: drag or swipe to look around, arrow keys to pan, +/− to zoom. A large “Exit 360° view” button (and Escape) returns to the page.
+- Responsive WebP images with explicit dimensions and lazy loading; phones download smaller previews.
+- Accessible markup: skip link, labelled controls, focus styles, live status messages, reduced-motion support and WCAG AA text contrast.
+- Search and sharing metadata: Open Graph, Twitter card, structured data for the studio, sitemap and touch icon.
+- A strict content security policy; all files are served from the site's own origin.
 
-The October image delivery was reviewed and mapped to the matching existing projects. The 75 raster originals total approximately 512 MB; their gallery exports total approximately 29.5 MB across responsive sizes, a 94% reduction. Phone galleries request only a preview at most 960 pixels wide (each at most 210 KB); desktop photographs are capped at 1920 pixels, with 2400-pixel versions for the infrastructure boards. Full-image links retain the complete composition, including embedded credits. Original files and the 146 MB video are not shipped to visitors or committed to the public repository. No gallery images are prefetched as a slideshow: the next image is requested on navigation and decoded before display. Closing the gallery clears its image element. The supplied logo replaces the recreated monogram, and the existing equirectangular panorama is retained because the delivery contains flat photographs rather than a replacement panorama.
+## Editing content
 
-Image filenames include a content fingerprint. Keep that convention for replacements so return visitors cannot reuse stale images. The gallery modules participate in the existing release-version hash and automatic update checks. Gallery transitions use a short opacity animation, respect reduced-motion preferences, and avoid backdrop blur; project zoom effects apply only to devices with a fine pointer and hover support.
+### Text, titles and contact details
 
-## Deploy
+Edit `dist/index.html`. The contact email appears in the studio, services and contact sections and in the gallery's inquiry link; the gallery reuses the address from that link, so no JavaScript needs changing. Update the `email` field in the structured data (`application/ld+json` in the page head) too.
+
+### English and Albanian
+
+English is written in `dist/index.html`; Albanian is in `dist/i18n.js`, matched by the exact English wording. When you change or add English text, add the Albanian version under the same English text. `npm test` lists any text, image description or message still missing a translation. Headings with an italic part are translated as a whole by their `data-i18n-html` key.
+
+Visitors switch with EN / SQ in the header. The choice is remembered, links such as `…/?lang=sq` open in Albanian, and browsers set to Albanian start in Albanian.
+
+### Adding or changing a project
+
+1. Add an `<article>` to `#project-grid` in `dist/index.html`, following an existing one. Give it a unique `id`, a `data-category` (`architecture`, `interiors` or `infrastructure`), and matching `data-project` (the next number) and `data-slug` (same as the `id`) on its link.
+2. Add the gallery images to `dist/project-images.js` under the same number.
+3. Run `npm run check && npm test`. The filter counts update automatically.
+
+### Images
+
+- Export WebP at 960 px wide (phone preview) and 1920 px (desktop); 480 px for card images.
+- Include a content fingerprint in every filename, e.g. `durres-02-960-24faf3a5.webp` (the first 8 characters of the file's SHA-256). Assets are cached for a long time, so a new file needs a new name.
+- `npm run check` fails if an asset is unused or has no fingerprint, so delete replaced files.
+- Keep original photographs and renders out of the repository; `extra/` is ignored by Git for this purpose.
+
+## Deployment
 
 ### GitHub Pages
 
-The repository already points to `https://github.com/pellumbmaraj/disi-website`. A deployment workflow is included in `.github/workflows/pages.yml`.
+The workflow in `.github/workflows/pages.yml` checks, tests and deploys every push to `main`. In the repository's **Settings → Pages**, set the source to **GitHub Actions**. The site is published at `https://pellumbmaraj.github.io/disi-website/`.
 
-1. Commit and push the site, scripts, tests and workflow to `main`:
+`npm run build:pages` writes the deployable site to `pages/` (ignored by Git). It:
 
-   ```sh
-   git add README.md .gitignore package.json dist scripts tests .github
-   git commit -m "Build responsive architecture portfolio"
-   git push origin main
-   ```
+- sets canonical, Open Graph and structured-data URLs to the deployed address (`SITE_URL=https://example.com/ npm run build:pages` for a custom domain);
+- generates `sitemap.xml` and `robots.txt`;
+- adds a release version to every script and stylesheet URL and writes `version.json`.
 
-2. On GitHub, open the repository's **Settings → Pages**. Under **Build and deployment**, select **GitHub Actions** as the source.
-3. Open **Actions → Deploy portfolio to GitHub Pages → Run workflow**. Later pushes to `main` deploy automatically after checks pass.
-4. The workflow's deployment link shows the live URL. With the current repository name and no custom domain, expect `https://pellumbmaraj.github.io/disi-website/`.
-
-GitHub Pages availability depends on the repository visibility and your GitHub plan. The usual Pages site is public; publishing does not preserve the private preview's ChatGPT sign-in restriction. GitHub's [custom workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) explains configuration and availability.
-
-The workflow validates the source, runs tests and uploads a prepared `pages/` directory. Relative asset URLs work under `/disi-website/`, at an account root and with custom domains. The configured Pages URL is used automatically for canonical and Open Graph metadata. A content hash of the HTML, JavaScript and CSS versions the whole module graph and stylesheet. The same release is published in `version.json` and the HTML metadata.
-
-On opening the page, restoring it from browser history, or returning to its tab, the page checks the release manifest with caching disabled and a unique request URL. A newer release triggers one automatic cache-bypassing navigation, then removes its internal update marker from the address bar. The normal public URL and any section anchor or other query parameters remain intact. No reload occurs when the release is unchanged or the check fails/offline; requests stay on the same origin. This also works without service workers or browser storage. The one-time adoption limit is that HTML cached before this updater existed must first expire under GitHub Pages' 10-minute cache policy; code cannot run inside an already-cached older document. Subsequent releases update automatically.
-
-To create the deployment files locally:
-
-```sh
-npm run build:pages
-```
-
-For another domain, use `SITE_URL=https://your-domain.example/ npm run build:pages`. `pages/` is generated and ignored by Git; `dist/` remains the editable source. No dependency installation or API keys are required.
-
-GitHub Pages does not apply `_headers`; its published HTML retains the fallback CSP, while response headers are controlled by GitHub.
+When a visitor opens or returns to the page, it checks `version.json`. If a newer release exists, it reloads once to pick it up, but never while a gallery or the 360° view is open.
 
 ### Other static hosts
 
-Serve `dist/` at the root or a directory path of any static HTTPS host. Apply `dist/_headers` on hosts that support it; otherwise configure the equivalent headers in the host settings. The local server applies these headers directly. The HTML includes a fallback CSP, but framing protection requires response headers.
-
-The canonical and Open Graph URLs in the source refer to the GitHub Pages deployment. The Pages preparation script adapts them to `SITE_URL`, including the selected cover image. Static files do not implement authentication; any private Sites preview has its own audience configuration.
-
-No runtime dependencies, analytics, cookies, external fonts, third-party scripts, database or upload endpoints are needed. Current source imagery and the GR logo come from the supplied October 2026 web-material archive; the Durrës image and panorama remain from the earlier design delivery.
+Serve `dist/` from any HTTPS host. Apply `dist/_headers` where the host supports it (Netlify, Cloudflare Pages); otherwise configure the same security and cache headers. GitHub Pages ignores `_headers`, so the page also carries a fallback content security policy.

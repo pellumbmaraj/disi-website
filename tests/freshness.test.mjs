@@ -104,3 +104,15 @@ test("overlapping checks coalesce and unbuilt previews make no request", async (
   await settle();
   assert.equal(local.calls.length, 0);
 });
+
+test("a newer release waits while the visitor is browsing a gallery or panorama", async () => {
+  const state = fixture({ response: { version: latest } });
+  let busy = true;
+  watchForUpdates({ ...state, isBusy: () => busy });
+  await settle();
+  assert.equal(state.navigations.length, 0);
+  busy = false;
+  state.doc.dispatchEvent(new Event("visibilitychange"));
+  await settle();
+  assert.equal(state.navigations.length, 1);
+});
